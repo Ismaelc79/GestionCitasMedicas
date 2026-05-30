@@ -1,0 +1,10 @@
+﻿
+
+namespace GestionCitasMedicas.Interfaces
+{
+    public interface IRepository<T>
+    {
+        void Agregar(T entidad);
+        List<T> ObtenerTodos();
+    }
+}

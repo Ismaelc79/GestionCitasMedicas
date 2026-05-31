@@ -10,6 +10,11 @@ namespace GestionCitasMedicas.Services
     public class PacienteService
     {
         private IRepository<Paciente> repository;
+        Paciente paciente = new()
+        {
+            
+
+        };
 
         public PacienteService(IRepository<Paciente> repository)
         {

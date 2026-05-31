@@ -10,6 +10,10 @@ namespace GestionCitasMedicas.Services
     public class CitaService
     {
         private IRepository<Cita> repository;
+        public CitaService(IRepository<Cita> repository)
+        {
+            this.repository = repository;
+        }
 
         public void AgendarCita(
            Paciente paciente,

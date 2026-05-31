@@ -27,7 +27,7 @@ namespace GestionCitasMedicas.Services
             string idMedico,
             string exequatur,
             DateTime horarioTrabajo,
-            double sueldo
+            decimal sueldo
             )
         {
             Medico medico = new()

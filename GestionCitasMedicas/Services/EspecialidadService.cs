@@ -25,7 +25,7 @@ namespace GestionCitasMedicas.Services
             Especialidad especialidad = new()
             {
                 NombreEspecialidad = nombre,
-                CodigoEspecialidad = codigoEspecialidad,
+                IdEspecialidad = codigoEspecialidad,
                 Descripcion = descripcion
             };
             repository.Agregar(especialidad);

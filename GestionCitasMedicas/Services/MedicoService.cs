@@ -1,10 +1,50 @@
-﻿using System;
+﻿using GestionCitasMedicas.Entities;
+using GestionCitasMedicas.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GestionCitasMedicas.Services
 {
-    internal class MedicoService
+    public class MedicoService
     {
+        private MedicoRepository repository;
+
+        public MedicoService(MedicoRepository repository)
+        {
+            this.repository = repository;
+        }
+
+        public void RegistrarMedico(
+            string nombre,
+            string apellido,
+            int edad,
+            string cedula,
+            string telefono, 
+            string correo,
+            string direccion,
+            string idMedico,
+            string exequatur,
+            DateTime horarioTrabajo,
+            double sueldo
+            )
+        {
+            Medico medico = new()
+            {
+                Nombre = nombre,
+                Apellido = apellido,
+                Edad = edad,
+                Cedula = cedula,
+                Telefono = telefono,
+                Correo = correo,
+                Direccion = direccion,
+                IdMedico = idMedico,
+                Exequatur = exequatur,
+                HorarioTrabajo = horarioTrabajo,
+                Sueldo = (decimal)sueldo
+            };
+            repository.Agregar(medico);
+                
+        }
     }
 }

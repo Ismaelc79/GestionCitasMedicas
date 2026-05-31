@@ -9,7 +9,7 @@ namespace GestionCitasMedicas.Repositories
     {
         private List<Paciente> pacientes = new();
 
-        public void Agregar()
+        public void Agregar(Paciente paciente)
         {
             pacientes.Add(new Paciente());
             Console.WriteLine("Paciente agregado con éxito...");

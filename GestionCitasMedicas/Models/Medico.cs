@@ -6,7 +6,6 @@ namespace GestionCitasMedicas.Entities
     public  class Medico : Persona
     {
         public String? IdMedico { get; set; }
-        public String? Especialidad { get; set; }
         public String? Exequatur { get; set; }
         public DateTime? HorarioTrabajo { get; set; }
         public decimal? Sueldo { get; set; }

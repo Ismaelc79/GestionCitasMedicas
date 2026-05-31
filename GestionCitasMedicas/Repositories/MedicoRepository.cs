@@ -9,7 +9,7 @@ namespace GestionCitasMedicas.Repositories
     public class MedicoRepository
     {
         private List<Medico> medicos = new();
-        public void Agregar()
+        public void Agregar(Medico medico)
         {
           
             medicos.Add(new Medico());

@@ -2,7 +2,12 @@
 
 namespace GestionCitasMedicas.Services
 {
-    internal class RecordatorioService
+    public class RecordatorioService
     {
+
+        public void EnviarRecordatorio()
+        {
+            Console.WriteLine("Enviando recordatorio de cita médica...");
+        }
     }
 }

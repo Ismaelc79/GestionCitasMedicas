@@ -6,18 +6,8 @@ using System.Text;
 
 namespace GestionCitasMedicas.Repositories
 {
-    public class MedicoRepository
+    public class MedicoRepository: Repository<Medico>
     {
-        private List<Medico> medicos = new();
-        public void Agregar(Medico medico)
-        {
-          
-            medicos.Add(new Medico());
-            Console.WriteLine("Médico agregado con éxito...");
-        }
-
-        public List<Medico> ObtenerMedicos(){ 
-            return medicos;
-        }
+      
     }
 }

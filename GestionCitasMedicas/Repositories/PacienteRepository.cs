@@ -5,19 +5,8 @@ using System.Text;
 
 namespace GestionCitasMedicas.Repositories
 {
-    public class PacienteRepository
+    public class PacienteRepository : Repository<Paciente>
     {
-        private List<Paciente> pacientes = new();
-
-        public void Agregar(Paciente paciente)
-        {
-            pacientes.Add(new Paciente());
-            Console.WriteLine("Paciente agregado con éxito...");
-        }
-
-        public List<Paciente> ObtenerPaciente()
-        {
-            return pacientes;
-        }
+      
     }
 }

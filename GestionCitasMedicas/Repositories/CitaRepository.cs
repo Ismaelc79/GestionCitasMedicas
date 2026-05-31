@@ -5,22 +5,9 @@ using System.Text;
 
 namespace GestionCitasMedicas.Repositories
 {
-    public class CitaRepository
+    public class CitaRepository : Repository<Cita>
     {
-        private List<Cita> citas = new();
-
-        public void AgregarCita(Cita cita)
-        {
-            citas.Add(cita);
-            Console.WriteLine("Cita agregada exitosamente");
-        }
-
-        public List<Cita> ObtenerCitas()
-        {
-
-         return citas;
-
-        }
+     
 
     }
 }

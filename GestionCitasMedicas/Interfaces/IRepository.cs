@@ -6,5 +6,9 @@ namespace GestionCitasMedicas.Interfaces
     {
         void Agregar(T entidad);
         List<T> ObtenerTodos();
+
+        void Eliminar(T entidad);
+
+        void Actualizar(T entidad);
     }
 }

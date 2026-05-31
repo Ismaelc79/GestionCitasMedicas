@@ -1,4 +1,5 @@
 ﻿
+
 bool salir = false; 
 
 while (!salir) {
@@ -25,6 +26,7 @@ while (!salir) {
     {
         case "1":
         Console.WriteLine("Registrar pacientes");
+            
             break;
         case "2":
             Console.WriteLine("Registrar médicos");

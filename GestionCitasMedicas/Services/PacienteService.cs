@@ -1,4 +1,5 @@
 ﻿using GestionCitasMedicas.Entities;
+using GestionCitasMedicas.Interfaces;
 using GestionCitasMedicas.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ namespace GestionCitasMedicas.Services
 {
     public class PacienteService
     {
-        private PacienteRepository repository;
+        private IRepository<Paciente> repository;
 
-        public PacienteService(PacienteRepository repository)
+        public PacienteService(IRepository<Paciente> repository)
         {
             this.repository = repository;
         }

@@ -18,5 +18,17 @@ namespace GestionCitasMedicas.Repositories
         {
            return datos;
         }
+
+        public virtual void Eliminar(T entidad)
+        {
+            datos.Remove(entidad);
+            Console.WriteLine("Datos eliminados con éxito!");
+        }
+
+        public virtual void Actualizar(T entidad)
+        {
+     
+        }
+
     }
 }

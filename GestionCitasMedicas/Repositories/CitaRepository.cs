@@ -7,7 +7,9 @@ namespace GestionCitasMedicas.Repositories
 {
     public class CitaRepository : Repository<Cita>
     {
-     
-
+        public void AgregarCita(Cita cita)
+        {
+            datos.Add(cita);
+        }
     }
 }

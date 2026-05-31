@@ -1,4 +1,5 @@
 ﻿using GestionCitasMedicas.Entities;
+using GestionCitasMedicas.Interfaces;
 using GestionCitasMedicas.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,17 +9,17 @@ namespace GestionCitasMedicas.Services
 {
     public class EspecialidadService
     {
-     private EspecialidadRepository repository;
+        private IRepository<Especialidad> repository;
 
-        public EspecialidadService(EspecialidadRepository repository)
+        public EspecialidadService(IRepository<Especialidad> repository)
         {
             this.repository = repository;
         }
 
-         public void RegistrarEspecialidad(
-         string nombre,
-         string codigoEspecialidad,
-         string descripcion)
+        public void RegistrarEspecialidad(
+        string nombre,
+        string codigoEspecialidad,
+        string descripcion)
         {
 
             Especialidad especialidad = new()
@@ -28,6 +29,12 @@ namespace GestionCitasMedicas.Services
                 Descripcion = descripcion
             };
             repository.Agregar(especialidad);
+        }
+
+        public void AsignarMedicoEspecialidad(Medico medico, Especialidad especialidad)
+        {
+            medico.Especialidad = especialidad;
+            
         }
     }
 }

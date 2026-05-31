@@ -15,8 +15,7 @@ namespace GestionCitasMedicas.Validators
             else
             {
                 return true;
-            }
-               
+            }      
             
         }
     }

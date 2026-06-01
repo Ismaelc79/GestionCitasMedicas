@@ -3,7 +3,6 @@ using GestionCitasMedicas.Interfaces;
 using GestionCitasMedicas.Notifications;
 using GestionCitasMedicas.Repositories;
 using GestionCitasMedicas.Services;
-using System.Security.Cryptography.X509Certificates;
 
 IRepository<Paciente> pacienteRepository = new PacienteRepository();
 IRepository<Medico> medicoRepository = new MedicoRepository();

@@ -1,17 +1,21 @@
 ﻿using GestionCitasMedicas.Entities;
 using GestionCitasMedicas.Interfaces;
+using GestionCitasMedicas.Notifications;
 using GestionCitasMedicas.Repositories;
 using GestionCitasMedicas.Services;
+using System.Security.Cryptography.X509Certificates;
 
 IRepository<Paciente> pacienteRepository = new PacienteRepository();
 IRepository<Medico> medicoRepository = new MedicoRepository();
 IRepository<Especialidad> especialidadRepository = new EspecialidadRepository();
 IRepository<Cita> citaRepository = new CitaRepository();
+INotificacionService notificacionService = new EmailNotificationService();
 
 PacienteService pacienteService = new PacienteService(pacienteRepository);
 MedicoService medicoService = new MedicoService(medicoRepository);
 CitaService citaService = new CitaService(citaRepository);
 EspecialidadService especialidadService = new EspecialidadService(especialidadRepository);
+RecordatorioService recordatorioService = new RecordatorioService(notificacionService);
 
 bool salir = false; 
 
@@ -20,7 +24,6 @@ while (!salir) {
     Console.Clear();
 
     Console.WriteLine("+----------Sistema de Gestión de Citas Médicas----------+");
-    Console.WriteLine("Elija la opción deseada:");
     Console.WriteLine("1. Registrar pacientes");
     Console.WriteLine("2. Registrar médicos");
     Console.WriteLine("3. Registrar especialidades médicas");
@@ -34,146 +37,235 @@ while (!salir) {
     Console.WriteLine("0. Salir del sistema");
 
     Console.Write("Ingrese su opción: ");
-    String? opcion = Console.ReadLine();
+    String? opcion = Console.ReadLine() ?? "";
 
     switch (opcion)
     {
         case "1":
-        Console.WriteLine("==Registrar pacientes==");
-            string nombre = LeerTexto("Ingrese el nombre del paciente:");
-            string apellido = LeerTexto("Ingrese el apellido del paciente:");
-            int edad = LeerEntero("Ingrese la edad del paciente:");
-            string cedula = LeerTexto("Ingrese la cédula del paciente:");
-            string telefono = LeerTexto("Ingrese el teléfono del paciente:");
-            string correo = LeerTexto("Ingrese el correo del paciente: ");
-            string direccion = LeerTexto("Ingrese la dirección del paciente:");
-            string idPaciente = LeerTexto("Ingrese el ID del paciente:");
-            string esPacienteActivo = LeerTexto("¿El paciente está activo? (Sí/No):");
+        Console.WriteLine("== Registrar pacientes ==");
+            string id = LeerTexto("ID del paciente:");
+            string nombre = LeerTexto("Nombre:");
+            string apellido = LeerTexto("Apellido:");
+            string cedula = LeerTexto("Cédula (10 dígitos):");
+            string telefono = LeerTexto("Teléfono:");
+            string correo = LeerTexto("Correo:");
 
             pacienteService.RegistrarPaciente(
-            nombre,apellido, edad, cedula, telefono, correo, 
-            direccion, idPaciente, esPacienteActivo);
-
+            id,nombre,apellido,cedula, telefono, correo);
             break;
 
         case "2":
-            Console.WriteLine("==Registrar médicos==");
-            string nombreMedico = LeerTexto("Ingrese el nombre del médico:");
-            string apellidoMedico = LeerTexto("Ingrese el apellido del médico:");
-            int edadMedico = LeerEntero("Ingrese la edad del médico: ");
-            string cedulaMedico = LeerTexto("Ingrese la cédula del médico:");
-            string telefonoMedico = LeerTexto("Ingrese el teléfono del médico:");
-            string correoMedico = LeerTexto("Ingrese el correo del médico:");
-            string direccionMedico = LeerTexto("Ingrese la dirección del médico:");
-            string idMedico = LeerTexto("Ingrese el ID del médico: ");
-            string exequatur = LeerTexto("Ingrese el exeqúatur:");
-            DateTime horarioTrabajo = LeerFecha("Ingrese el horario de trabajo del médico" +
-            "(formato: dd/MM/yyyy HH:mm): ");
-            decimal sueldo = LeerDecimal("Ingrese el sueldo del médico: ");
+            Console.WriteLine("== Registrar médicos ==");
+            string idMedico = LeerTexto("ID Médico: ");
+            string nombreMedico = LeerTexto("Nombre:");
+            string apellidoMedico = LeerTexto("Apellido:");
+            string cedulaMedico = LeerTexto("Cédula (10 dígitos):");
+            string telefonoMedico = LeerTexto("Teléfono:");
+            string correoMedico = LeerTexto("Correo:");
 
-            medicoService.RegistrarMedico(nombreMedico, apellidoMedico, edadMedico, cedulaMedico,
-            telefonoMedico, correoMedico, direccionMedico, idMedico, exequatur, horarioTrabajo, sueldo);
-
+            medicoService.RegistrarMedico(idMedico,nombreMedico, apellidoMedico,cedulaMedico,
+            telefonoMedico, correoMedico);
             break;
 
         case "3":
-            Console.WriteLine("==Registrar especialidades médicas==");
-            string nombreEspecialidad = LeerTexto("Ingrese el nombre de la especialidad médica:");
-            string codigoEspecialidad = LeerTexto("Ingrese el código de la especialidad médica:");
-            string descripcionEspecialidad = LeerTexto("Ingrese la descripción de la especialidad médica:");
-            
-            especialidadService.RegistrarEspecialidad(
-            nombreEspecialidad, codigoEspecialidad, descripcionEspecialidad);
-
+            Console.WriteLine("== Registrar Especialidad ==");
+                string idEspecialidad = LeerTexto("ID Especialidad:");
+                string nombreEspecialidad = LeerTexto("Nombre de la especialidad:");
+            especialidadService.RegistrarEspecialidad(idEspecialidad, nombreEspecialidad);
             break;
 
         case "4":
-            Console.WriteLine("==Asignar médicos a una especialidad==");
-            Console.WriteLine("Médicos registrados:");
-            List<Medico> medicosDisponibles = medicoRepository.ObtenerTodos();
-            List <Especialidad> especialidadesDisponibles = especialidadRepository.ObtenerTodos();
-            Console.WriteLine("Medicos registrados:");
-            
-            foreach (Medico medico in medicosDisponibles)
-            {
-                Console.WriteLine($"ID: {medico.IdMedico}, Nombre: {medico.Nombre} {medico.Apellido}");
-            }
+            Console.WriteLine("==Asignar Especialidad a Médico==");
+            MostrarMedicos(medicoRepository);
+            MostrarEspecialidades(especialidadRepository);
 
-            Console.WriteLine("Especialidades registradas:");
-            foreach(Especialidad especialidad in especialidadesDisponibles)
-            {
-                Console.WriteLine($"ID: {especialidad.IdEspecialidad}, Nombre: {especialidad.NombreEspecialidad}");
-            }
-            string idMedicoAsignar = LeerTexto("Ingrese el ID del médico a asignar:");
-            string idEspecialidadAsignar = LeerTexto("Ingrese el ID de la especialidad a asignar:");
-            Medico medicoSeleccionado= medicosDisponibles.FirstOrDefault(m=> m.IdMedico == idMedicoAsignar);
-            Especialidad especialidadAsignada = especialidadesDisponibles.FirstOrDefault(e => e.IdEspecialidad == idEspecialidadAsignar);
-            
-            EspecialidadService AsignarMedicoEspecialidad(Medico medico, Especialidad especialidad)
-            {
-                medico.Especialidad= especialidad;
-            }
+            string idMedAsignar = LeerTexto("Ingrese el ID del médico:");
+            string idEspAsignar = LeerTexto("Ingrese el ID de la especialidad:");
 
+            Medico medicoAsignar = BuscarMedico(medicoRepository, idMedAsignar);
+            Especialidad espAsignar = BuscarEspecialidad(especialidadRepository, idEspAsignar);
+
+            if(medicoAsignar != null && espAsignar != null)
+                especialidadService.AsignarMedicoEspecialidad(medicoAsignar, espAsignar);
+            else
+                Console.WriteLine("Médico o especialidad no encontrado");  
             break;
 
         case "5":
-            Console.WriteLine("==Agendar citas médicas==");
-            string idPacienteCita = LeerTexto("Ingrese el ID del paciente para la cita:");
-            string idMedicoCita = LeerTexto("Ingrese el ID del médico para la cita:");
-            DateTime fechaHoraCita = LeerFecha("Ingrese la fecha y hora de la cita (formato: dd/MM/yyyy HH:mm):");
+            Console.WriteLine("\n== Agendar Cita ==");
+            MostrarPacientes(pacienteRepository);
+            MostrarMedicos(medicoRepository);
+
+            string idPacCita = LeerTexto("ID del paciente: ");
+            string idMedCita = LeerTexto("ID del médico: ");
+
+            Paciente pacienteCita = BuscarPaciente(pacienteRepository, idPacCita);
+            Medico medicoCita = BuscarMedico(medicoRepository, idMedCita);
+
+            if (pacienteCita == null || medicoCita == null)
+            {
+                Console.WriteLine("Paciente o médico no encontrado.");
+                break;
+            }
+
+            string idCita = LeerTexto("ID de la cita: ");
+            DateTime fechaCita = LeerFecha("Fecha y hora (dd/MM/yyyy HH:mm): ");
+            citaService.AgendarCita(idCita, pacienteCita, medicoCita, fechaCita);
             break;
 
         case "6":
-            Console.WriteLine("==Consultar citas por paciente==");
+            Console.WriteLine("\n== Consultar Citas por Paciente ==");
+            MostrarPacientes(pacienteRepository);
+            string idPacConsulta = LeerTexto("ID del paciente: ");
+            citaService.ConsultarCitasPorPaciente(idPacConsulta);
             break;
+
         case "7":
-            Console.WriteLine("==Consultar citas por médico==");
+            Console.WriteLine("\n== Consultar Citas por Médico ==");
+            MostrarMedicos(medicoRepository);
+            string idMedConsulta = LeerTexto("ID del médico: ");
+            citaService.ConsultarCitasPorMedico(idMedConsulta);
             break;
+
         case "8":
-            Console.WriteLine("==Cancelar citas==");
+            Console.WriteLine("\n== Cancelar Cita ==");
+            MostrarCitas(citaRepository);
+            string idCitaCancelar = LeerTexto("ID de la cita a cancelar: ");
+            citaService.CancelarCita(idCitaCancelar);
             break;
+
         case "9":
-            Console.WriteLine("==Reprogramar citas==");
+            Console.WriteLine("\n== Reprogramar Cita ==");
+            MostrarCitas(citaRepository);
+            string idCitaReprog = LeerTexto("ID de la cita a reprogramar: ");
+            DateTime nuevaFecha = LeerFecha("Nueva fecha y hora (dd/MM/yyyy HH:mm): ");
+            citaService.ReprogramarCita(idCitaReprog, nuevaFecha);
             break;
+
         case "10":
-            Console.WriteLine("==Enviar recordatorio de citas==");
+            Console.WriteLine("\n== Enviar Recordatorio ==");
+            MostrarCitas(citaRepository);
+            string idCitaRecord = LeerTexto("ID de la cita: ");
+            Cita citaRecord = BuscarCita(citaRepository, idCitaRecord);
+            if (citaRecord != null)
+                recordatorioService.EnviarRecordatorio(citaRecord);
+            else
+                Console.WriteLine("Cita no encontrada.");
             break;
+
         case "0":
-            Console.WriteLine("Saliendo del sistema...Pase feliz resto del día!");
+            Console.WriteLine("Saliendo del sistema... ¡Hasta pronto!");
             salir = true;
             break;
 
         default:
-            Console.WriteLine("Opción no válida. Por favor, ingrese una opción del 0 al 10");
-            Console.WriteLine("Presione cualquier tecla para continuar");
+            Console.WriteLine("Opción no válida. Ingrese un número del 0 al 10.");
             break;
-            
     }
-    Console.ReadKey();
 
-    static String LeerTexto(string mensaje)
+    if (!salir)
+    {
+        Console.WriteLine("\nPresione cualquier tecla para continuar...");
+        Console.ReadKey();
+    }
+}
+static string LeerTexto(string mensaje)
+{
+    Console.Write(mensaje);
+    return Console.ReadLine() ?? string.Empty;
+}
+
+static DateTime LeerFecha(string mensaje)
+{
+    while (true)
     {
         Console.Write(mensaje);
-        return Console.ReadLine() ?? string.Empty;
-    }
+        string entrada = Console.ReadLine() ?? "";
 
-    static int LeerEntero(string mensaje)
+        if (DateTime.TryParse(entrada, out DateTime fecha))
+            return fecha;
+
+        Console.WriteLine("Fecha inválida. Ejemplo: 15/06/2026 10:30");
+    }
+}
+
+static Paciente BuscarPaciente(IRepository<Paciente> repo, string id)
+{
+    foreach (Paciente p in repo.ObtenerTodos())
     {
-        Console.WriteLine(mensaje);
-        return int.Parse(Console.ReadLine()?? "0");
+        if (p.IdPaciente == id)
+            return p;
     }
+    return null;
+}
 
-    static decimal LeerDecimal(string mensaje)
+static Medico BuscarMedico(IRepository<Medico> repo, string id)
+{
+    foreach (Medico m in repo.ObtenerTodos())
     {
-        Console.WriteLine(mensaje);
-        return decimal.Parse(Console.ReadLine() ?? "0");
+        if (m.IdMedico == id)
+            return m;
     }
+    return null;
+}
 
-    static DateTime LeerFecha(string mensaje)
+static Especialidad BuscarEspecialidad(IRepository<Especialidad> repo, string id)
+{
+    foreach (Especialidad e in repo.ObtenerTodos())
     {
-        Console.WriteLine(mensaje);
-        return DateTime.Parse(Console.ReadLine() ?? DateTime.Now.ToString());
+        if (e.IdEspecialidad == id)
+            return e;
     }
+    return null;
+}
 
+static Cita BuscarCita(IRepository<Cita> repo, string id)
+{
+    foreach (Cita c in repo.ObtenerTodos())
+    {
+        if (c.IdCita == id)
+            return c;
+    }
+    return null;
+}
+static void MostrarPacientes(IRepository<Paciente> repo)
+{
+    List<Paciente> lista = repo.ObtenerTodos();
+    if (lista.Count == 0) { Console.WriteLine("No hay pacientes registrados."); return; }
+
+    Console.WriteLine("Pacientes registrados:");
+    lista.ForEach(p => Console.WriteLine($"  ID: {p.IdPaciente} | {p.Nombre} {p.Apellido}"));
+}
+
+static void MostrarMedicos(IRepository<Medico> repo)
+{
+    List<Medico> lista = repo.ObtenerTodos();
+    if (lista.Count == 0) { Console.WriteLine("No hay médicos registrados."); return; }
+
+    Console.WriteLine("Médicos registrados:");
+    lista.ForEach(m =>
+    {
+        string especialidad = m.Especialidad != null ? m.Especialidad.NombreEspecialidad : "Sin asignar";
+        Console.WriteLine($"  ID: {m.IdMedico} | Dr. {m.Nombre} {m.Apellido} | Especialidad: {especialidad}");
+    });
+}
+
+static void MostrarEspecialidades(IRepository<Especialidad> repo)
+{
+    List<Especialidad> lista = repo.ObtenerTodos();
+    if (lista.Count == 0) { Console.WriteLine("No hay especialidades registradas."); return; }
+
+    Console.WriteLine("Especialidades registradas:");
+    lista.ForEach(e => Console.WriteLine($"  ID: {e.IdEspecialidad} | {e.NombreEspecialidad}"));
+}
+
+static void MostrarCitas(IRepository<Cita> repo)
+{
+    List<Cita> lista = repo.ObtenerTodos();
+    if (lista.Count == 0) { Console.WriteLine("No hay citas registradas."); return; }
+
+    Console.WriteLine("Citas registradas:");
+    lista.ForEach(c => Console.WriteLine(
+        $"  ID: {c.IdCita} | {c.Paciente.Nombre} {c.Paciente.Apellido} -> Dr. {c.Medico.Nombre} | {c.FechaHora:dd/MM/yyyy HH:mm} | [{c.EstadoCita}]"));
 }
 

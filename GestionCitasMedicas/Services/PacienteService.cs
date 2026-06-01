@@ -10,11 +10,6 @@ namespace GestionCitasMedicas.Services
     public class PacienteService
     {
         private IRepository<Paciente> repository;
-        Paciente paciente = new()
-        {
-            
-
-        };
 
         public PacienteService(IRepository<Paciente> repository)
         {
@@ -22,33 +17,33 @@ namespace GestionCitasMedicas.Services
         }
 
         public void RegistrarPaciente(
+            string idPaciente,
             string nombre,
             string apellido,
-            int edad,
+
             string cedula,
             string telefono,
-            string correo,
-            string direccion,
-            string idPaciente,
-            string esPacienteActivo)
+            string correo)
         {
-            
-            Paciente paciente = new()
+
+            var paciente = new Paciente
             {
+                IdPaciente = idPaciente,
                 Nombre = nombre,
                 Apellido = apellido,
-                Edad = edad,
                 Cedula = cedula,
                 Telefono = telefono,
-                Correo = correo,
-                Direccion = direccion,
-                IdPaciente = idPaciente,
-                EsPacienteActivo = esPacienteActivo
+                Correo = correo
             };
+
             repository.Agregar(paciente);
+            Console.WriteLine("Paciente agregado con éxito!");
 
         }
-
+        public List<Paciente> ObtenerPacientes()
+        {
+            return repository.ObtenerTodos();
+        }
     }
 }
 

@@ -11,7 +11,6 @@ namespace GestionCitasMedicas.Repositories
         public virtual void Agregar(T entidad)
         {
             datos.Add(entidad);
-            Console.WriteLine("Datos agregados con éxito!");
         }
 
         public List<T> ObtenerTodos()
@@ -22,7 +21,6 @@ namespace GestionCitasMedicas.Repositories
         public virtual void Eliminar(T entidad)
         {
             datos.Remove(entidad);
-            Console.WriteLine("Datos eliminados con éxito!");
         }
 
         public virtual void Actualizar(T entidad)

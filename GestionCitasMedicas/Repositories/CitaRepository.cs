@@ -5,11 +5,8 @@ using System.Text;
 
 namespace GestionCitasMedicas.Repositories
 {
-    public class CitaRepository : Repository<Cita>
+    public class CitaRepository : Repository<Cita> 
     {
-        public void AgregarCita(Cita cita)
-        {
-            datos.Add(cita);
-        }
+   
     }
 }

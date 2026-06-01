@@ -1,6 +1,7 @@
 ﻿using GestionCitasMedicas.Entities;
 using GestionCitasMedicas.Interfaces;
 using GestionCitasMedicas.Repositories;
+using GestionCitasMedicas.Validators;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,77 +17,104 @@ namespace GestionCitasMedicas.Services
         }
 
         public void AgendarCita(
-           Paciente paciente,
-           Medico medico, 
-           DateTime fechaHora,
-           String idCita)
+         string idCita,
+         Paciente paciente,
+         Medico medico,
+         DateTime fechaHora)
         {
-            Cita cita = new Cita();
+            if(!CitaValidacion.ValidarFechaHora(fechaHora))
+            {
+                Console.WriteLine("La fecha y hora de la cita no pueden ser en el pasado.");
+                return;
+            }
 
-            cita.Paciente = paciente;
-            cita.Medico = medico;
-            cita.FechaHoraCita = fechaHora;
-            cita.IdCita = idCita;
+            Cita cita = new Cita
+            {
+                IdCita = idCita,
+                Paciente = paciente,
+                Medico = medico,
+                FechaHora = fechaHora,
+                EstadoCita = "Activa"
+            };
+
             repository.Agregar(cita);
-            Console.WriteLine("Cita médica agendada con éxito!"); 
+            Console.WriteLine("Cita agendada con éxito");
+        }
+
+        public void ConsultarCitasPorPaciente(string idPaciente )
+        {
+           List<Cita> citas = repository.ObtenerTodos();
+           bool encontrado = false;
+
+            foreach( Cita cita in citas )
+            {
+                if (cita.Paciente.IdPaciente == idPaciente)
+                {
+                    Console.WriteLine($"Cita ID: {cita.IdCita}, Médico: {cita.Medico.Nombre}, Fecha y Hora: {cita.FechaHora} {cita.EstadoCita}");
+                    encontrado = true;
+                }
+            }
+            if(!encontrado)
+           Console.WriteLine("No hay citas disponibles para este paciente");
+        }
+
+        public void ConsultarCitasPorMedico(string idMedico)
+        {
+            List<Cita> citas = repository.ObtenerTodos();
+            bool encontrado = false;
+             foreach( Cita cita in citas )
+             {
+                 if (cita.Medico.IdMedico == idMedico)
+                 {
+                     Console.WriteLine($"Cita ID: {cita.IdCita}, Paciente: {cita.Paciente.Nombre}, Fecha y Hora: {cita.FechaHora} {cita.EstadoCita}");
+                     encontrado = true;
+                 }
+             }
+             if(!encontrado)
+                Console.WriteLine("No hay citas disponibles para este médico");
+          
+        }
+
+        public void CancelarCita(string idCita)
+        {
+            List<Cita> citas = repository.ObtenerTodos();
+            foreach( Cita cita in citas)
+            {
+                if (cita.IdCita == idCita)
+                {
+                    cita.EstadoCita = "Cancelada";
+                    Console.WriteLine("Cita cancelada con éxito!");
+                    return;
+                }
+            }
+            Console.WriteLine("Cita no encontrada");
+        }
+        public void ReprogramarCita(string idCita, DateTime nuevaFecha)
+        {
+            if (!CitaValidacion.ValidarFechaHora(nuevaFecha))
+            {
+                Console.WriteLine("La nueva fecha debe ser posterior a la fecha actual");
+                return;
+            }
+
+            List<Cita> citas = repository.ObtenerTodos();
+
+            foreach( Cita cita in citas)
+            {
+               if(cita.IdCita == idCita)
+                {
+                    cita.FechaHora = nuevaFecha;
+                    Console.WriteLine("Cita reprogramada con éxito!");
+                    return;
+                }
+            }
+            Console.WriteLine("Cita no encontrada");
            
         }
-        public void ConsultarCitasPorPaciente(Paciente paciente)
+
+        public List<Cita> ObtenerTodasCitas()
         {
-           Console.WriteLine("Consultando citas médicas...");
-
-            repository.ObtenerTodos().ForEach(c =>
-            {
-                if (c.Paciente.IdPaciente == paciente.IdPaciente)
-                {
-                    Console.WriteLine($"Cita ID: {c.IdCita}, Médico: {c.Medico.Nombre}, Fecha y Hora: {c.FechaHoraCita}");
-                }
-            });
-
-        }
-
-        public void ConsultarCitasPorMedico(Medico medico)
-        {
-            Console.WriteLine("Consultando citas médicas...");
-
-            repository.ObtenerTodos().ForEach(c =>
-            {
-                if (c.Medico.IdMedico == medico.IdMedico)
-                {
-                    Console.WriteLine($"Cita ID: {c.IdCita}, Paciente: {c.Paciente.Nombre}, Fecha y Hora: {c.FechaHoraCita}");
-                }
-            });
-        }
-
-        public void cancelarCita(Paciente paciente, Medico medico, Cita cita)
-        {
-            Console.WriteLine("Cancelando cita médica...");
-            repository.ObtenerTodos().ForEach(c =>
-            {
-                if (c.Paciente.IdPaciente == paciente.IdPaciente && 
-                c.Medico.IdMedico == medico.IdMedico && 
-                c.IdCita == cita.IdCita)
-                {
-                  repository.Eliminar(c);
-                }
-            });
-
-        }
-        public void ReprogramarCita(Paciente paciente, Medico medico, Cita cita)
-        {
-            Console.WriteLine("Reprogramando cita médica...");
-            repository.ObtenerTodos().ForEach(c =>
-            {
-                if (c.Paciente.IdPaciente == paciente.IdPaciente &&
-                c.Medico.IdMedico == medico.IdMedico &&
-                c.IdCita == cita.IdCita)
-                {
-                    Console.WriteLine("Ingrese la nueva fecha y hora para la cita:");
-                    DateTime nuevaFechaHora = DateTime.Parse(Console.ReadLine());
-                    c.FechaHoraCita = nuevaFechaHora;
-                    Console.WriteLine("Cita médica reprogramada con éxito!");
-                }
-            });
+            return repository.ObtenerTodos();
         }
     }
 }

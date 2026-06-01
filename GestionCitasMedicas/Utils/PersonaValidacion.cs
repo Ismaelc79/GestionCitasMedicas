@@ -8,15 +8,7 @@ namespace GestionCitasMedicas.Validators
     {
         public static bool ValidarCedula(string cedula)
         {
-            if (string.IsNullOrEmpty(cedula) || cedula.Length != 10)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }      
-            
+            return !string.IsNullOrWhiteSpace(cedula) && cedula.Length == 10;
         }
     }
 }

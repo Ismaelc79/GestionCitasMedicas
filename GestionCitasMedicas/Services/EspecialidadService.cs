@@ -18,23 +18,26 @@ namespace GestionCitasMedicas.Services
 
         public void RegistrarEspecialidad(
         string nombre,
-        string codigoEspecialidad,
-        string descripcion)
+        string codigoEspecialidad)
         {
-
-            Especialidad especialidad = new()
+            var especialidad = new Especialidad
             {
-                NombreEspecialidad = nombre,
                 IdEspecialidad = codigoEspecialidad,
-                Descripcion = descripcion
+                NombreEspecialidad = nombre
             };
             repository.Agregar(especialidad);
+            Console.WriteLine("Especialidad agregada con éxito!");
         }
 
         public void AsignarMedicoEspecialidad(Medico medico, Especialidad especialidad)
         {
             medico.Especialidad = especialidad;
-            
+            Console.WriteLine("Especialidad asignada con éxito!");
+        }
+
+        public List<Especialidad> ObtenerEspecialidades()
+        {
+            return repository.ObtenerTodos();
         }
     }
 }

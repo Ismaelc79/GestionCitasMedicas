@@ -8,16 +8,7 @@ namespace GestionCitasMedicas.Validators
     {
         public static bool ValidarFechaHora(DateTime fechaHora)
         {
-            if (fechaHora < DateTime.Now)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public static bool ValidarIdCita(String idCita)
-        {
-            return !string.IsNullOrEmpty(idCita);
+            return fechaHora > DateTime.Now;
         }
     }
 }

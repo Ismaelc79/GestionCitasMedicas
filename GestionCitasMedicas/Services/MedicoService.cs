@@ -17,35 +17,29 @@ namespace GestionCitasMedicas.Services
         }
 
         public void RegistrarMedico(
+            string idMedico,
             string nombre,
             string apellido,
-            int edad,
             string cedula,
-            string telefono, 
-            string correo,
-            string direccion,
-            string idMedico,
-            string exequatur,
-            DateTime horarioTrabajo,
-            decimal sueldo
+            string telefono,
+            string correo
             )
         {
-            Medico medico = new()
+            var medico = new Medico()
             {
                 Nombre = nombre,
                 Apellido = apellido,
-                Edad = edad,
                 Cedula = cedula,
                 Telefono = telefono,
                 Correo = correo,
-                Direccion = direccion,
                 IdMedico = idMedico,
-                Exequatur = exequatur,
-                HorarioTrabajo = horarioTrabajo,
-                Sueldo = (decimal)sueldo
             };
             repository.Agregar(medico);
-                
+            Console.WriteLine("Médico agregado con éxito!");     
+        }
+
+        public List<Medico> ObtenerMedicos(){
+            return repository.ObtenerTodos();
         }
     }
 }

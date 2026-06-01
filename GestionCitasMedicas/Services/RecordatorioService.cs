@@ -7,20 +7,23 @@ namespace GestionCitasMedicas.Services
 {
     public class RecordatorioService
     {
-        IRepository<Paciente> repository;
-        public void EnviarRecordatorio(Paciente paciente, Cita cita)
-        {
-            repository.ObtenerTodos().ForEach(p =>
-            {
-                if (p.IdPaciente == paciente.IdPaciente)
-                {
-                    Console.WriteLine(
-                    $"Enviando recordatorio de cita médica a {p.Nombre}..."
-                        
-                   );
-                }
-            });
+        private INotificacionService recordatorioService;
 
+        public RecordatorioService(INotificacionService recordatorioService)
+        {
+            this.recordatorioService = recordatorioService;
+        }
+        public void EnviarRecordatorio(Cita cita)
+        {
+            if(string.IsNullOrEmpty(cita.Paciente?.Correo))
+            {
+                Console.WriteLine("El paciente no tiene un correo electrónico registrado.");
+                return;
+            }
+            string mensaje = $"Recordatorio: Tienes una cita programada para el {cita.FechaHora:dd/MM/yyyy HH:mm} con el Dr. " +
+            $"{cita.Medico?.Nombre}.";
+
+            recordatorioService.EnviarNotificacion(cita.Paciente.Correo, mensaje);
         }
     }
 }

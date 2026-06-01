@@ -92,7 +92,7 @@ while (!salir) {
             break;
 
         case "5":
-            Console.WriteLine("\n== Agendar Cita ==");
+            Console.WriteLine("== Agendar Cita ==");
             MostrarPacientes(pacienteRepository);
             MostrarMedicos(medicoRepository);
 
@@ -114,28 +114,28 @@ while (!salir) {
             break;
 
         case "6":
-            Console.WriteLine("\n== Consultar Citas por Paciente ==");
+            Console.WriteLine("== Consultar Citas por Paciente ==");
             MostrarPacientes(pacienteRepository);
             string idPacConsulta = LeerTexto("ID del paciente: ");
             citaService.ConsultarCitasPorPaciente(idPacConsulta);
             break;
 
         case "7":
-            Console.WriteLine("\n== Consultar Citas por Médico ==");
+            Console.WriteLine("== Consultar Citas por Médico ==");
             MostrarMedicos(medicoRepository);
             string idMedConsulta = LeerTexto("ID del médico: ");
             citaService.ConsultarCitasPorMedico(idMedConsulta);
             break;
 
         case "8":
-            Console.WriteLine("\n== Cancelar Cita ==");
+            Console.WriteLine("== Cancelar Cita ==");
             MostrarCitas(citaRepository);
             string idCitaCancelar = LeerTexto("ID de la cita a cancelar: ");
             citaService.CancelarCita(idCitaCancelar);
             break;
 
         case "9":
-            Console.WriteLine("\n== Reprogramar Cita ==");
+            Console.WriteLine("== Reprogramar Cita ==");
             MostrarCitas(citaRepository);
             string idCitaReprog = LeerTexto("ID de la cita a reprogramar: ");
             DateTime nuevaFecha = LeerFecha("Nueva fecha y hora (dd/MM/yyyy HH:mm): ");
@@ -143,7 +143,7 @@ while (!salir) {
             break;
 
         case "10":
-            Console.WriteLine("\n== Enviar Recordatorio ==");
+            Console.WriteLine("== Enviar Recordatorio ==");
             MostrarCitas(citaRepository);
             string idCitaRecord = LeerTexto("ID de la cita: ");
             Cita citaRecord = BuscarCita(citaRepository, idCitaRecord);
